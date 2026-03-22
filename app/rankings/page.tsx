@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
-import logoImage from '@/logo.png';
 
 interface Opinion {
   id: string;
@@ -40,8 +39,10 @@ export default function RankingsPage() {
         <div className={styles.logo}>
           <Link href="/">
             <Image
-              src={logoImage}
+              src="/logo_mori_fill.svg"
               alt="Mory"
+              width={51}
+              height={68}
               className={styles.logoImage}
               priority
             />

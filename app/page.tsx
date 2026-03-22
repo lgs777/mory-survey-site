@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase, mockOpinions } from '@/lib/supabase';
 import InlineOpinionForm from '@/components/InlineOpinionForm';
-import logoImage from '@/logo.png';
 
 export const revalidate = 0; // Disable caching to fetch fresh data
 
@@ -44,8 +43,10 @@ export default async function Home() {
         <div className={styles.logo}>
           <Link href="/" aria-label="메인페이지로 이동">
             <Image
-              src={logoImage}
+              src="/logo_mori_fill.svg"
               alt="Mory"
+              width={51}
+              height={68}
               className={styles.logoImage}
               priority
             />
