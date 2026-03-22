@@ -1,7 +1,17 @@
-import { NextResponse } from 'next/server';
-import { classifyOpinionWithGemini } from '@/lib/gemini';
-import { isPublicDatabaseConfigured } from '@/lib/supabase-admin';
+import { after, NextResponse } from 'next/server';
+import { classifyOpinionWithGemini, isGeminiConfigured } from '@/lib/gemini';
+import {
+  isAdminDatabaseConfigured,
+  isPublicDatabaseConfigured,
+  supabaseAdmin,
+} from '@/lib/supabase-admin';
+import {
+  normalizeOpinionCategory,
+  normalizeOpinionHashtags,
+} from '@/lib/opinion-taxonomy';
 import { supabase, mockOpinions } from '@/lib/supabase';
+
+export const maxDuration = 30;
 
 export async function GET() {
   if (supabase) {
@@ -24,33 +34,61 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { content, category, hashtags } = body;
     const trimmedContent = typeof content === 'string' ? content.trim() : '';
+    const opinionId = crypto.randomUUID();
+    const initialClassification = {
+      category: normalizeOpinionCategory(
+        typeof category === 'string' ? category : undefined,
+      ),
+      hashtags: normalizeOpinionHashtags(hashtags),
+    };
 
     if (!trimmedContent) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
     if (supabase && isPublicDatabaseConfigured()) {
-      const classification = await classifyOpinionWithGemini(trimmedContent, {
-        category,
-        hashtags,
-      });
-
       const { error } = await supabase
         .from('opinions')
         .insert([
           {
+            id: opinionId,
             content: trimmedContent,
-            category: classification.category,
-            hashtags: classification.hashtags,
+            category: initialClassification.category,
+            hashtags: initialClassification.hashtags,
             status: 'pending',
           },
         ]);
 
       if (error) throw error;
-      return NextResponse.json(
-        { success: true, classification },
-        { status: 201 },
-      );
+
+      const adminClient = supabaseAdmin;
+
+      if (isGeminiConfigured() && adminClient && isAdminDatabaseConfigured()) {
+        after(async () => {
+          try {
+            const classification = await classifyOpinionWithGemini(trimmedContent, {
+              category: initialClassification.category,
+              hashtags: initialClassification.hashtags,
+            });
+
+            const { error: updateError } = await adminClient
+              .from('opinions')
+              .update({
+                category: classification.category,
+                hashtags: classification.hashtags,
+              })
+              .eq('id', opinionId);
+
+            if (updateError) {
+              console.error('Opinion classification update failed:', updateError.message);
+            }
+          } catch (classificationError) {
+            console.error('Opinion classification job failed:', classificationError);
+          }
+        });
+      }
+
+      return NextResponse.json({ success: true }, { status: 201 });
     }
 
     return NextResponse.json(
