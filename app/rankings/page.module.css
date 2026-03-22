@@ -8,7 +8,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
+  height: 40px;
+  padding: 0 2rem;
+  box-sizing: border-box;
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
@@ -26,8 +28,8 @@
 }
 
 .logoImage {
-  width: 56px;
-  height: auto;
+  width: auto;
+  height: 40px;
   display: block;
 }
 
@@ -39,12 +41,16 @@
 .nav {
   display: flex;
   gap: 2rem;
+  align-items: center;
   font-size: 0.95rem;
   font-weight: bold;
   color: var(--foreground);
 }
 
 .nav a {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
   transition: opacity 0.2s;
 }
 

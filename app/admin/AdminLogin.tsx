@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
+import AdminHeader from './AdminHeader';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -43,36 +44,39 @@ export default function AdminLogin() {
   };
 
   return (
-    <main className={styles.loginShell}>
-      <section className={styles.loginCard}>
-        <p className={styles.loginEyebrow}>Protected Admin Page</p>
-        <h1 className={styles.loginTitle}>데이터베이스 열람 페이지</h1>
-        <p className={styles.loginDescription}>
-          저장된 의견 데이터를 확인하거나 수동으로 등록하려면 관리자 비밀번호가 필요합니다.
-        </p>
+    <div className={styles.pageShell}>
+      <AdminHeader />
+      <main className={styles.loginShell}>
+        <section className={styles.loginCard}>
+          <p className={styles.loginEyebrow}>Protected Admin Page</p>
+          <h1 className={styles.loginTitle}>데이터베이스 열람 페이지</h1>
+          <p className={styles.loginDescription}>
+            저장된 의견 데이터를 확인하거나 수동으로 등록하려면 관리자 비밀번호가 필요합니다.
+          </p>
 
-        <form onSubmit={handleSubmit} className={styles.loginForm}>
-          <label htmlFor="admin-password" className={styles.loginLabel}>
-            PASSWORD
-          </label>
-          <input
-            id="admin-password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className={styles.loginInput}
-            placeholder="관리자 비밀번호를 입력해 주세요"
-          />
-          {error && <p className={styles.errorMessage}>{error}</p>}
-          <button
-            type="submit"
-            disabled={!password.trim() || isSubmitting}
-            className={styles.loginButton}
-          >
-            {isSubmitting ? '확인 중...' : '페이지 열기'}
-          </button>
-        </form>
-      </section>
-    </main>
+          <form onSubmit={handleSubmit} className={styles.loginForm}>
+            <label htmlFor="admin-password" className={styles.loginLabel}>
+              PASSWORD
+            </label>
+            <input
+              id="admin-password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className={styles.loginInput}
+              placeholder="관리자 비밀번호를 입력해 주세요"
+            />
+            {error && <p className={styles.errorMessage}>{error}</p>}
+            <button
+              type="submit"
+              disabled={!password.trim() || isSubmitting}
+              className={styles.loginButton}
+            >
+              {isSubmitting ? '확인 중...' : '페이지 열기'}
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
   );
 }

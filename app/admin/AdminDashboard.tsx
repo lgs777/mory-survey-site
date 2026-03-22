@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
+import AdminHeader from './AdminHeader';
 
 type Opinion = {
   id: string;
@@ -185,167 +186,170 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className={styles.container}>
-      <div className={styles.topBar}>
-        <div>
-          <h1 className={styles.title}>관리자 데이터베이스</h1>
-          <p className={styles.description}>
-            입력 폼에서 쌓인 데이터를 열람하고, 상태를 변경하거나 관리자 데이터를 직접 추가할 수 있습니다.
-          </p>
-        </div>
-        <button onClick={handleLogout} className={styles.logoutBtn}>
-          로그아웃
-        </button>
-      </div>
-
-      <div className={styles.adminFormContainer}>
-        <h3>관리자 수동 입력</h3>
-        <form onSubmit={handleCreate} className={styles.adminForm}>
-          <textarea
-            placeholder="데이터베이스에 직접 저장할 의견을 입력해 주세요."
-            value={adminContent}
-            onChange={(event) => setAdminContent(event.target.value)}
-            required
-            className={styles.inputArea}
-          />
-          <div className={styles.formRow}>
-            <input
-              type="text"
-              placeholder="카테고리"
-              value={adminCategory}
-              onChange={(event) => setAdminCategory(event.target.value)}
-              className={styles.input}
-            />
-            <input
-              type="text"
-              placeholder="해시태그 (쉼표로 구분)"
-              value={adminHashtags}
-              onChange={(event) => setAdminHashtags(event.target.value)}
-              className={styles.input}
-            />
-            <button type="submit" className={styles.submitBtn}>
-              직접 등록
-            </button>
+    <div className={styles.pageShell}>
+      <AdminHeader />
+      <main className={styles.container}>
+        <div className={styles.topBar}>
+          <div>
+            <h1 className={styles.title}>관리자 데이터베이스</h1>
+            <p className={styles.description}>
+              입력 폼에서 쌓인 데이터를 열람하고, 상태를 변경하거나 관리자 데이터를 직접 추가할 수 있습니다.
+            </p>
           </div>
-        </form>
-      </div>
+          <button onClick={handleLogout} className={styles.logoutBtn}>
+            로그아웃
+          </button>
+        </div>
 
-      {error && <p className={styles.errorBanner}>{error}</p>}
+        <div className={styles.adminFormContainer}>
+          <h3>관리자 수동 입력</h3>
+          <form onSubmit={handleCreate} className={styles.adminForm}>
+            <textarea
+              placeholder="데이터베이스에 직접 저장할 의견을 입력해 주세요."
+              value={adminContent}
+              onChange={(event) => setAdminContent(event.target.value)}
+              required
+              className={styles.inputArea}
+            />
+            <div className={styles.formRow}>
+              <input
+                type="text"
+                placeholder="카테고리"
+                value={adminCategory}
+                onChange={(event) => setAdminCategory(event.target.value)}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="해시태그 (쉼표로 구분)"
+                value={adminHashtags}
+                onChange={(event) => setAdminHashtags(event.target.value)}
+                className={styles.input}
+              />
+              <button type="submit" className={styles.submitBtn}>
+                직접 등록
+              </button>
+            </div>
+          </form>
+        </div>
 
-      {loading ? (
-        <p>로딩 중...</p>
-      ) : (
-        <div className={styles.tableContainer}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>상태</th>
-                <th>내용</th>
-                <th>카테고리</th>
-                <th>태그 (쉼표 구분)</th>
-                <th>등록일</th>
-                <th>관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {opinions.length === 0 ? (
+        {error && <p className={styles.errorBanner}>{error}</p>}
+
+        {loading ? (
+          <p>로딩 중...</p>
+        ) : (
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <td colSpan={6} className={styles.empty}>
-                    데이터가 없습니다
-                  </td>
+                  <th>상태</th>
+                  <th>내용</th>
+                  <th>카테고리</th>
+                  <th>태그 (쉼표 구분)</th>
+                  <th>등록일</th>
+                  <th>관리</th>
                 </tr>
-              ) : (
-                opinions.map((opinion) => (
-                  <tr key={opinion.id}>
-                    <td>
-                      <span className={`${styles.status} ${styles[opinion.status]}`}>
-                        {opinion.status === 'pending'
-                          ? '대기중'
-                          : opinion.status === 'approved'
-                            ? '승인됨'
-                            : '거절됨'}
-                      </span>
-                    </td>
-                    <td className={styles.contentCell}>{opinion.content}</td>
-                    <td>
-                      <input
-                        className={styles.editInput}
-                        value={editState[opinion.id]?.category ?? opinion.category ?? ''}
-                        onChange={(event) =>
-                          handleEditChange(opinion.id, 'category', event.target.value)
-                        }
-                        placeholder="카테고리"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className={styles.editInput}
-                        value={
-                          editState[opinion.id]?.hashtags ??
-                          (opinion.hashtags ? opinion.hashtags.join(', ') : '')
-                        }
-                        onChange={(event) =>
-                          handleEditChange(opinion.id, 'hashtags', event.target.value)
-                        }
-                        placeholder="태그"
-                      />
-                    </td>
-                    <td className={styles.dateCell}>
-                      {new Date(opinion.created_at).toLocaleString('ko-KR')}
-                    </td>
-                    <td className={styles.actionsCell}>
-                      <div className={styles.actions}>
-                        {opinion.status === 'pending' && (
-                          <>
-                            <button
-                              onClick={() =>
-                                handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
-                              }
-                              className={styles.approveBtn}
-                            >
-                              저장 및 승인
-                            </button>
-                            <button
-                              onClick={() => handleDelete(opinion.id)}
-                              className={styles.rejectBtn}
-                            >
-                              삭제
-                            </button>
-                          </>
-                        )}
-                        {opinion.status !== 'pending' && (
-                          <>
-                            <button
-                              onClick={() =>
-                                handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
-                              }
-                              className={styles.approveBtn}
-                            >
-                              수정 저장
-                            </button>
-                            <button
-                              onClick={() => handleUpdate(opinion.id, { status: 'pending' })}
-                              className={styles.rejectBtn}
-                            >
-                              대기중으로 변경
-                            </button>
-                            <button
-                              onClick={() => handleDelete(opinion.id)}
-                              className={styles.rejectBtn}
-                            >
-                              삭제
-                            </button>
-                          </>
-                        )}
-                      </div>
+              </thead>
+              <tbody>
+                {opinions.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className={styles.empty}>
+                      데이터가 없습니다
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </main>
+                ) : (
+                  opinions.map((opinion) => (
+                    <tr key={opinion.id}>
+                      <td>
+                        <span className={`${styles.status} ${styles[opinion.status]}`}>
+                          {opinion.status === 'pending'
+                            ? '대기중'
+                            : opinion.status === 'approved'
+                              ? '승인됨'
+                              : '거절됨'}
+                        </span>
+                      </td>
+                      <td className={styles.contentCell}>{opinion.content}</td>
+                      <td>
+                        <input
+                          className={styles.editInput}
+                          value={editState[opinion.id]?.category ?? opinion.category ?? ''}
+                          onChange={(event) =>
+                            handleEditChange(opinion.id, 'category', event.target.value)
+                          }
+                          placeholder="카테고리"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className={styles.editInput}
+                          value={
+                            editState[opinion.id]?.hashtags ??
+                            (opinion.hashtags ? opinion.hashtags.join(', ') : '')
+                          }
+                          onChange={(event) =>
+                            handleEditChange(opinion.id, 'hashtags', event.target.value)
+                          }
+                          placeholder="태그"
+                        />
+                      </td>
+                      <td className={styles.dateCell}>
+                        {new Date(opinion.created_at).toLocaleString('ko-KR')}
+                      </td>
+                      <td className={styles.actionsCell}>
+                        <div className={styles.actions}>
+                          {opinion.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
+                                }
+                                className={styles.approveBtn}
+                              >
+                                저장 및 승인
+                              </button>
+                              <button
+                                onClick={() => handleDelete(opinion.id)}
+                                className={styles.rejectBtn}
+                              >
+                                삭제
+                              </button>
+                            </>
+                          )}
+                          {opinion.status !== 'pending' && (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
+                                }
+                                className={styles.approveBtn}
+                              >
+                                수정 저장
+                              </button>
+                              <button
+                                onClick={() => handleUpdate(opinion.id, { status: 'pending' })}
+                                className={styles.rejectBtn}
+                              >
+                                대기중으로 변경
+                              </button>
+                              <button
+                                onClick={() => handleDelete(opinion.id)}
+                                className={styles.rejectBtn}
+                              >
+                                삭제
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
