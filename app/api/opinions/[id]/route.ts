@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ADMIN_SESSION_COOKIE, isValidAdminSession } from '@/lib/admin-auth';
+import { isDatabaseConfigured, supabaseAdmin } from '@/lib/supabase-admin';
 import { supabase } from '@/lib/supabase';
 
 type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
+function ensureAdmin(request: NextRequest) {
+  const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  return isValidAdminSession(token);
+}
+
 export async function PUT(request: NextRequest, context: RouteContext) {
+  if (!ensureAdmin(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -17,30 +28,47 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     if (body.hashtags !== undefined) updates.hashtags = body.hashtags;
     if (body.content !== undefined) updates.content = body.content;
 
-    if (supabase) {
-      const { data, error } = await supabase
+    const writeClient = supabaseAdmin ?? supabase;
+
+    if (!writeClient || !isDatabaseConfigured()) {
+      return NextResponse.json(
+        { error: '데이터베이스가 아직 연결되지 않았습니다.' },
+        { status: 503 },
+      );
+    }
+
+    const { data, error } = await writeClient
         .from('opinions')
         .update(updates)
         .eq('id', id)
         .select();
 
-      if (error) throw error;
-      return NextResponse.json(data[0]);
-    }
-    return NextResponse.json({ id, ...updates });
+    if (error) throw error;
+    return NextResponse.json(data[0]);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  if (!ensureAdmin(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { id } = await context.params;
-    if (supabase) {
-      const { error } = await supabase.from('opinions').delete().eq('id', id);
-      if (error) throw error;
-      return NextResponse.json({ success: true });
+
+    const writeClient = supabaseAdmin ?? supabase;
+
+    if (!writeClient || !isDatabaseConfigured()) {
+      return NextResponse.json(
+        { error: '데이터베이스가 아직 연결되지 않았습니다.' },
+        { status: 503 },
+      );
     }
+
+    const { error } = await writeClient.from('opinions').delete().eq('id', id);
+    if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

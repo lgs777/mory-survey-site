@@ -6,25 +6,33 @@ export default function InlineOpinionForm() {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
     setIsSubmitting(true);
+    setError('');
     try {
       const res = await fetch('/api/opinions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
       });
+
+      const data = await res.json();
+
       if (res.ok) {
         setSuccess(true);
         setContent('');
         setTimeout(() => setSuccess(false), 3000);
+      } else {
+        setError(data.error || '의견을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.');
       }
     } catch (err) {
       console.error(err);
+      setError('네트워크 문제로 저장에 실패했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -69,6 +77,7 @@ export default function InlineOpinionForm() {
           e.target.style.boxShadow = 'none';
         }}
       />
+      {error && <p style={{ fontSize: '0.9rem', color: '#b42318' }}>{error}</p>}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: '0.875rem', color: '#a8a29e' }}>{content.length} / 300</span>
         <button

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isDatabaseConfigured } from '@/lib/supabase-admin';
 import { supabase, mockOpinions } from '@/lib/supabase';
 
 export async function GET() {
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
-    if (supabase) {
+    if (supabase && isDatabaseConfigured()) {
       const { data, error } = await supabase
         .from('opinions')
         .insert([{ content, category: category || '기타', hashtags: hashtags || [], status: 'pending' }])
@@ -34,18 +35,12 @@ export async function POST(request: Request) {
 
       if (error) throw error;
       return NextResponse.json(data[0], { status: 201 });
-    } else {
-      // Mock insert (doesn't persist across restarts)
-      const newOp = { 
-        id: Math.random().toString(), 
-        content, 
-        category: category || '기타', 
-        hashtags: hashtags || [], 
-        status: 'pending', 
-        created_at: new Date().toISOString() 
-      };
-      return NextResponse.json(newOp, { status: 201 });
     }
+
+    return NextResponse.json(
+      { error: '데이터베이스가 아직 연결되지 않았습니다.' },
+      { status: 503 },
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
