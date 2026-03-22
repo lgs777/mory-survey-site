@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { classifyOpinionWithGemini } from '@/lib/gemini';
 import { isPublicDatabaseConfigured } from '@/lib/supabase-admin';
 import { supabase, mockOpinions } from '@/lib/supabase';
 
@@ -22,19 +23,34 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { content, category, hashtags } = body;
+    const trimmedContent = typeof content === 'string' ? content.trim() : '';
 
-    if (!content) {
+    if (!trimmedContent) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
     if (supabase && isPublicDatabaseConfigured()) {
+      const classification = await classifyOpinionWithGemini(trimmedContent, {
+        category,
+        hashtags,
+      });
+
       const { error } = await supabase
         .from('opinions')
-        .insert([{ content, category: category || '기타', hashtags: hashtags || [], status: 'pending' }])
-        ;
+        .insert([
+          {
+            content: trimmedContent,
+            category: classification.category,
+            hashtags: classification.hashtags,
+            status: 'pending',
+          },
+        ]);
 
       if (error) throw error;
-      return NextResponse.json({ success: true }, { status: 201 });
+      return NextResponse.json(
+        { success: true, classification },
+        { status: 201 },
+      );
     }
 
     return NextResponse.json(
