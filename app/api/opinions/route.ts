@@ -1,0 +1,52 @@
+import { NextResponse } from 'next/server';
+import { supabase, mockOpinions } from '@/lib/supabase';
+
+export async function GET() {
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('opinions')
+      .select('*')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(data);
+  } else {
+    // Return mock data for local testing
+    return NextResponse.json(mockOpinions);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { content, category, hashtags } = body;
+
+    if (!content) {
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+    }
+
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('opinions')
+        .insert([{ content, category: category || '기타', hashtags: hashtags || [], status: 'pending' }])
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json(data[0], { status: 201 });
+    } else {
+      // Mock insert (doesn't persist across restarts)
+      const newOp = { 
+        id: Math.random().toString(), 
+        content, 
+        category: category || '기타', 
+        hashtags: hashtags || [], 
+        status: 'pending', 
+        created_at: new Date().toISOString() 
+      };
+      return NextResponse.json(newOp, { status: 201 });
+    }
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

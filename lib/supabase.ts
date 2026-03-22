@@ -1,0 +1,72 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export const supabase = supabaseUrl && supabaseKey 
+  ? createClient(supabaseUrl, supabaseKey) 
+  : null;
+
+// Mock data fallback if Supabase is not configured
+export const mockOpinions = [
+  { id: '1', content: '장례식장 특유의 무거운 분위기가 조문객으로 하여금 슬픔을 강요하는 것 같아 불편했어요.', status: 'approved', category: '분위기', hashtags: ['의무적슬픔', '무거운분위기'], created_at: new Date().toISOString() },
+  { id: '2', content: '디지털 네이티브 세대인데, 수기 방명록이나 종이 화환 같은 아날로그 방식이 이질적으로 느껴집니다.', status: 'approved', category: '편의성', hashtags: ['아날로그', '수기방명록'], created_at: new Date().toISOString() },
+  { id: '3', content: '3일장 이후에 고인을 추모할 수 있는 공간이 부족해서 아쉬워요. 일회성으로 끝나는 느낌입니다.', status: 'approved', category: '추모방식', hashtags: ['지속적추모', '아쉬움'], created_at: new Date().toISOString() },
+  { id: '4', content: '개성 없는 획일적인 절차 때문에 고인의 진짜 삶을 기리지 못하는 것 같아요.', status: 'approved', category: '절차', hashtags: ['획일화', '개성없음'], created_at: new Date().toISOString() },
+  { id: '5', content: '장례식 비용과 환경 오염 문제. 무분별한 종이컵, 화환 사용은 개선되어야 한다고 봅니다.', status: 'approved', category: '환경/비용', hashtags: ['환경오염', '낭비'], created_at: new Date().toISOString() },
+  { id: '6', content: '밤샘 조문을 강요하는 문화 때문에 체력적으로 너무 힘듭니다.', status: 'approved', category: '절차', hashtags: ['밤샘조문', '피로'], created_at: new Date().toISOString() },
+  { id: '7', content: '형식적인 조문객 맞이에 밀려 유족들이 정작 고인과 이별할 시간이 부족합니다.', status: 'approved', category: '분위기', hashtags: ['애도시간부족', '손님맞이'], created_at: new Date().toISOString() },
+  { id: '8', content: '멀리 사는 지인들을 위한 온라인 조문 시스템이 제대로 갖춰졌으면 합니다.', status: 'approved', category: '편의성', hashtags: ['온라인조문', '접근성'], created_at: new Date().toISOString() },
+  { id: '9', content: '종교적인 의식이 너무 강요되는 경우가 많아 불편을 느꼈습니다.', status: 'approved', category: '분위기', hashtags: ['종교강요', '불편함'], created_at: new Date().toISOString() },
+  { id: '10', content: '조의금을 직접 계좌로 보내는 것이 예의에 어긋난다는 인식이 바뀌었으면 좋겠습니다.', status: 'approved', category: '편의성', hashtags: ['모바일부조', '인식개선'], created_at: new Date().toISOString() },
+  { id: '11', content: '한 번 쓰고 버려지는 국화꽃 대량 소비가 자원 낭비 같습니다.', status: 'approved', category: '환경/비용', hashtags: ['국화꽃', '낭비'], created_at: new Date().toISOString() },
+  { id: '12', content: '슬픔을 나누기보다는 보여주기식 행사가 되어가는 것 같아요.', status: 'approved', category: '의식', hashtags: ['과시용', '체면치레'], created_at: new Date().toISOString() },
+  { id: '13', content: '장례식장 식비가 너무 과도하게 비싼 것 같습니다.', status: 'approved', category: '환경/비용', hashtags: ['바가지', '식대부담'], created_at: new Date().toISOString() },
+  { id: '14', content: '육개장과 수육으로 통일된 식사 메뉴가 아쉬워요. 고인이 좋아하던 음식을 대접할 순 없을까요?', status: 'approved', category: '식문화', hashtags: ['획일적식사', '고인취향'], created_at: new Date().toISOString() },
+  { id: '15', content: '어린 아이들이 참석하기에는 장례식장이 너무 어둡고 무서운 공간으로만 연출되는 것 같아요.', status: 'approved', category: '분위기', hashtags: ['아동접근성', '어두운분위기'], created_at: new Date().toISOString() },
+  { id: '16', content: '상복을 반드시 대여해야만 하는 문화가 불필요하게 느껴집니다.', status: 'approved', category: '의복', hashtags: ['상복대여', '형식주의'], created_at: new Date().toISOString() },
+  { id: '17', content: '생전에 고인을 위한 \'생전 장례식\' 문화가 정착되었으면 좋겠습니다.', status: 'approved', category: '트렌드', hashtags: ['생전장례식', '새로운문화'], created_at: new Date().toISOString() },
+  { id: '18', content: '갑작스러운 부고 알림을 받을 때, 적절한 위로의 말을 전하기가 너무 어렵습니다.', status: 'approved', 소분류: '소통', category: '소통', hashtags: ['부고문자', '위로'], created_at: new Date().toISOString() },
+  { id: '19', content: '유족들이 슬퍼할 겨를도 없이 너무 많은 행정 절차를 처리해야 하는 점이 안타깝습니다.', status: 'approved', category: '편의성', hashtags: ['복잡한절차', '행정처리'], created_at: new Date().toISOString() },
+  { id: '20', content: '반려동물의 장례 절차도 사람처럼 조금 더 따뜻하고 존중받는 방식이 생겼으면 좋겠어요.', status: 'approved', category: '기타', hashtags: ['반려동물', '장례'], created_at: new Date().toISOString() },
+  { id: '21', content: '영정사진 외에 고인의 생전 동영상이나 일상을 담은 추모 영상이 끊임없이 재생되었으면 좋겠어요.', status: 'approved', category: '추모방식', hashtags: ['디지털추모', '영상제공'], created_at: new Date().toISOString() },
+  { id: '22', content: '왜 всегда 3일장만 해야하는지 모르겠습니다. 1일장이나 2일장도 자연스러워져야 해요.', status: 'approved', category: '절차', hashtags: ['기간단축', '융통성'], created_at: new Date().toISOString() },
+  { id: '23', content: '부고장 양식이 너무 딱딱합니다. 조금 더 따뜻한 말투의 부고장을 쓸 순 없을까요?', status: 'approved', category: '소통', hashtags: ['부고장양식', '감성'], created_at: new Date().toISOString() },
+  { id: '24', content: '장례식장에서 일회용품의 산이 쌓이는 걸 보면 기분이 착잡해집니다.', status: 'approved', category: '환경/비용', hashtags: ['일회용품', '환경문제'], created_at: new Date().toISOString() },
+  { id: '25', content: '여성 상주에 대한 차별적인 분위기나 선입견이 여전히 남아있어 껄끄럽습니다.', status: 'approved', category: '의식', hashtags: ['여성상주', '성차별'], created_at: new Date().toISOString() },
+  { id: '26', content: '너무 갑작스러운 부고 연락 시 현금을 뽑기 위해 ATM을 찾아야 하는 것이 당황스럽습니다.', status: 'approved', category: '편의성', hashtags: ['현금조의금', '불편함'], created_at: new Date().toISOString() },
+  { id: '27', content: '가족장이나 스몰 장례를 하려고 해도 주변 눈치를 보게 되는 사회적 시선이 문제입니다.', status: 'approved', category: '의식', hashtags: ['스몰장례', '눈치'], created_at: new Date().toISOString() },
+  { id: '28', content: '위로금(조의금)의 액수로 사람의 도리를 평가하는 분위기는 사라졌으면 합니다.', status: 'approved', category: '비용', hashtags: ['조의금부담', '체면'], created_at: new Date().toISOString() },
+  { id: '29', content: '장례식장 안내원들의 서비스나 진행이 너무 기계적이고 차가워서 상처받았습니다.', status: 'approved', category: '분위기', hashtags: ['불친절', '서비스'], created_at: new Date().toISOString() },
+  { id: '30', content: '장례용품의 가격 거품이 너무 심한 것 같아 금전적인 부담이 큽니다.', status: 'approved', category: '환경/비용', hashtags: ['가격거품', '부담'], created_at: new Date().toISOString() },
+  { id: '31', content: '빈소를 지키며 밤을 새우는 풍습 탓에 장례 후 일상 복귀가 너무 힘듭니다.', status: 'approved', category: '절차', hashtags: ['수면부족', '밤샘'], created_at: new Date().toISOString() },
+  { id: '32', content: '온라인 부고장에 악성 스팸 문자나 스미싱이 섞여올까봐 누르기 두렵습니다.', status: 'approved', category: '편의성', hashtags: ['스미싱', '보안우려'], created_at: new Date().toISOString() },
+  { id: '33', content: '화장터 예약이 너무 밀려 어쩔 수 없이 4일장, 5일장을 해야 하는 현실이 개선되었으면 해요.', status: 'approved', category: '인프라', hashtags: ['화장장부족', '대기시간'], created_at: new Date().toISOString() },
+  { id: '34', content: '슬픔에 빠진 유족들에게 보험 정산 등 복잡한 서류를 들이미는 타이밍이 야속합니다.', status: 'approved', category: '행정', hashtags: ['서류절차', '타이밍불편'], created_at: new Date().toISOString() },
+  { id: '35', content: '장례식장에서 큰 소리로 떠들거나 술판이 벌어지는 모습은 고인에 대한 예의가 아니라고 생각해요.', status: 'approved', category: '분위기', hashtags: ['음주소란', '에티켓'], created_at: new Date().toISOString() },
+  { id: '36', content: '추억을 공유할 수 있는 디지털 방명록이 테이블마다 있었으면 좋겠어요.', status: 'approved', category: '편의성', hashtags: ['디지털방명록', '기억공유'], created_at: new Date().toISOString() },
+  { id: '37', content: '요즘 1인 가구도 많은데, 상주를 맡아줄 사람이 없는 경우의 장례 서비스가 필요합니다.', status: 'approved', category: '인프라', hashtags: ['1인가구', '고독사대비'], created_at: new Date().toISOString() },
+  { id: '38', content: '수목장, 해양장 같은 다양한 친환경 장례 옵션에 대한 정보가 너무 부족해요.', status: 'approved', category: '환경/비용', hashtags: ['자연장', '정보부족'], created_at: new Date().toISOString() },
+  { id: '39', content: '장례식 대관료, 용품 대여료 등 모든 비용이 투명하게 정찰제로 운영되었으면 좋겠습니다.', status: 'approved', category: '환경/비용', hashtags: ['정찰제', '비용투명화'], created_at: new Date().toISOString() },
+  { id: '40', content: '부고 소식을 전할 범위를 결정할 때마다 매번 곤혹스럽습니다. 명확한 기준이나 에티켓이 생겼으면 좋겠어요.', status: 'approved', category: '소통', hashtags: ['부고범위', '인간관계'], created_at: new Date().toISOString() },
+  { id: '41', content: '검은색 상복 대신 평상복이나 고인이 평소 좋아하시던 밝은 옷을 입고 추모하면 안 될까요?', status: 'approved', category: '의복', hashtags: ['밝은장례', '평상복'], created_at: new Date().toISOString() },
+  { id: '42', content: '조문객들에게 일괄적으로 수건을 답례품으로 주는 대신, 고인의 의미가 담긴 기부를 하는 등의 다른 방식이 있으면 좋겠어요.', status: 'approved', category: '답례풍습', hashtags: ['답례품', '의미있는기부'], created_at: new Date().toISOString() },
+  { id: '43', content: '제사상이나 차례상을 차릴 때 올리는 음식의 기준이 시대에 맞지 않아 낭비가 큽니다.', status: 'approved', category: '식문화', hashtags: ['제사음식', '전통허례허식'], created_at: new Date().toISOString() },
+  { id: '44', content: '아파트나 주거 밀집 지역 근처에 장례식장이 들어서는 것을 무조건 반대하는 님비 현상이 아쉽습니다.', status: 'approved', category: '사회인식', hashtags: ['님비현상', '인식전환'], created_at: new Date().toISOString() },
+  { id: '45', content: '기부금 형태의 조의금이 투명하게 쓰이는지 알 수 있는 시스템이 필요합니다.', status: 'approved', category: '편의성', hashtags: ['기부형조의금', '신뢰도'], created_at: new Date().toISOString() },
+  { id: '46', content: '메타버스를 활용해 해외에 있거나 거동이 불편한 분들도 가상 공간에서 추모할 수 있게 되면 좋겠습니다.', status: 'approved', category: '추모방식', hashtags: ['가상공간', '메타버스추모'], created_at: new Date().toISOString() },
+  { id: '47', content: '장지에 직접 방문하지 않고도 스마트폰으로 기일 알림과 함께 고인의 영상을 받아보는 구독형 추모 서비스도 고려해볼 만해요.', status: 'approved', category: '추모방식', hashtags: ['온라인기일', '알림서비스'], created_at: new Date().toISOString() },
+  { id: '48', content: '죽음에 대해 평소에 터놓고 이야기할 수 있는 문화가 부족해서, 막상 닥치면 당황하는 것 같아요.', status: 'approved', category: '사회인식', hashtags: ['죽음교육', '준비부족'], created_at: new Date().toISOString() },
+  { id: '49', content: '수의(壽衣)의 천연 소재 인증이나 친환경 제작 과정 여부를 고객이 투명하게 알 수 있게 해야 합니다.', status: 'approved', category: '의복', hashtags: ['친환경수의', '정보투명성'], created_at: new Date().toISOString() },
+  { id: '50', content: '장례식장에서도 휠체어 이용자나 노약자가 쉽게 다니고 쉬어갈 수 있는 무장애(Barrier-free) 설계가 필수적입니다.', status: 'approved', category: '인프라', hashtags: ['배리어프리', '접근성'], created_at: new Date().toISOString() },
+  { id: '51', content: '반드시 절을 해야만 예의라는 고정관념에서 벗어나 묵념 등으로도 충분히 위로를 전할 수 있었으면 합니다.', status: 'approved', category: '의식', hashtags: ['절강요', '묵념대체'], created_at: new Date().toISOString() },
+  { id: '52', content: '장례식장 내부 공기가 너무 탁해서 알레르기가 있는 사람이나 호흡기 약자들에게 힘든 환경입니다.', status: 'approved', category: '환경/비용', hashtags: ['환기부족', '쾌적한환경'], created_at: new Date().toISOString() },
+  { id: '53', content: '외국인 조문객을 위한 기본적인 영어 스크립트나 안내판이 전혀 없어 글로벌 시대에 맞지 않아요.', status: 'approved', category: '편의성', hashtags: ['외국어지원', '글로벌화'], created_at: new Date().toISOString() },
+  { id: '54', content: '장례 도우미 분들에게 의무적으로 팁을 요구하는 일부 잘못된 관행이 완전히 뿌리 뽑혔으면 합니다.', status: 'approved', category: '비용', hashtags: ['팁요구', '잘못된관행'], created_at: new Date().toISOString() },
+  { id: '55', content: '아이들이 장례 절차 중간중간 머무르며 심리적 안정을 찾을 수 있는 수유실/놀이방 공간이 마련되면 좋겠어요.', status: 'approved', category: '인프라', hashtags: ['키즈룸', '가족배려'], created_at: new Date().toISOString() },
+  { id: '56', content: '고인이 평소 아끼던 유품을 조문객들과 의미 있게 나눌 수 있는 작은 코너나 이벤트가 있으면 어떨까요?', status: 'approved', category: '추모방식', hashtags: ['유품나눔', '추억공유'], created_at: new Date().toISOString() },
+  { id: '57', content: '지나치게 슬픈 분위기의 장송곡 대신 고인의 플레이리스트를 배경음악으로 틀고 싶습니다.', status: 'approved', category: '분위기', hashtags: ['맞춤형선곡', '개취반영'], created_at: new Date().toISOString() },
+  { id: '58', content: '부고장 링크 클릭 시 바로 장례식장 내 빈소의 혼잡도를 확인할 수 있는 기능이 있으면 주차 대란을 막을 수 있을 거에요.', status: 'approved', category: '편의성', hashtags: ['혼잡도확인', '스마트기능'], created_at: new Date().toISOString() },
+  { id: '59', content: '화장 후 납골당 안치가 불가피하지만, 유지 관리 비용과 영구 안치가 불가능하다는 점에 대해 사전 교육이 필요합니다.', status: 'approved', category: '행정', hashtags: ['납골당안내', '사전교육'], created_at: new Date().toISOString() },
+  { id: '60', content: '조문 후 돌아갈 때 무심코 던져주는 소금보다, 유족의 진심이 담긴 다과 등 개인별 커스터마이징 답례품이 필요합니다.', status: 'approved', category: '답례풍습', hashtags: ['커스텀답례', '섬세함'], created_at: new Date().toISOString() }
+];

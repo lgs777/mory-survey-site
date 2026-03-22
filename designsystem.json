@@ -1,0 +1,96 @@
+{
+  "name": "Portrait Memorial AI Design System",
+  "description": "Premium Memorial aesthetic designed to be respectful, calm, and high-quality.",
+  "colors": {
+    "primaryTextAccent": {
+      "value": "#52453C",
+      "name": "Deep warm brown/stone",
+      "usage": "Used for primary buttons, active states, and main headings."
+    },
+    "secondaryText": {
+      "value": "#78716c",
+      "name": "Warm gray",
+      "usage": "Used for descriptions and secondary labels."
+    },
+    "tertiaryText": {
+      "value": "#a8a29e",
+      "name": "Light gray",
+      "usage": "Used for placeholders or disabled states."
+    },
+    "backgroundMain": {
+      "value": "#fdfcf8",
+      "name": "Off-white/Cream",
+      "usage": "Main content background."
+    },
+    "backgroundSecondary": {
+      "value": "#f5f4f0",
+      "name": "Light stone",
+      "usage": "Section backgrounds or cards."
+    },
+    "border": {
+      "value": "#e7e5e4",
+      "name": "Subtle stone border",
+      "usage": "Used for standard borders."
+    },
+    "destructive": {
+      "value": "text-red-500",
+      "name": "Red",
+      "usage": "Minimal use for clear/delete actions."
+    }
+  },
+  "typography": {
+    "headings": {
+      "fontFamily": "Pretendard",
+      "usage": "Used for main headings (e.g., '영정사진 제작 시작')."
+    },
+    "body": {
+      "fontFamily": "Pretendard",
+      "usage": "Default body text to ensure readability."
+    },
+    "weights": {
+      "medium": {
+        "value": "font-medium",
+        "usage": "Used for labels."
+      },
+      "bold": {
+        "value": "font-bold",
+        "usage": "Used for primary actions."
+      }
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": {
+        "styles": "bg-[#52453C] text-white hover:bg-[#3f352e] rounded-xl px-6 py-3 transition-colors"
+      },
+      "secondaryOutline": {
+        "styles": "border border-[#52453C] text-[#52453C] hover:bg-[#52453C]/5 rounded-xl"
+      }
+    },
+    "cards": {
+      "standard": {
+        "styles": "bg-white border border-[#e7e5e4] rounded-xl shadow-sm p-4 options-card"
+      },
+      "interactive": {
+        "styles": "hover:border-[#a8a29e] transition-all cursor-pointer"
+      }
+    },
+    "inputFields": {
+      "standard": {
+        "styles": "bg-[#fdfcf8] border border-[#e7e5e4] rounded-xl focus:border-[#52453C] focus:outline-none placeholder-[#a8a29e]"
+      }
+    }
+  },
+  "iconography": {
+    "library": "lucide-react",
+    "sizes": ["w-4 h-4", "w-5 h-5"],
+    "colors": {
+      "inactive": "#a8a29e",
+      "active": "#52453C"
+    }
+  },
+  "animation": {
+    "styles": ["animate-fade-in-up"],
+    "description": "Use subtle fades. Avoid flashy or rapid movements. Everything should feel 'calm'."
+  }
+}
