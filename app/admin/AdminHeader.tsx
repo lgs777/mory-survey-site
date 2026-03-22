@@ -14,6 +14,7 @@ export default function AdminHeader() {
             className={styles.logoImage}
             priority
           />
+          <span className={styles.brandLabel}>| 장례 희망</span>
         </Link>
       </div>
       <nav className={styles.nav}>

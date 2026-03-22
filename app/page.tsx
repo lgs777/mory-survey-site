@@ -42,12 +42,15 @@ export default async function Home() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <Image
-            src={logoImage}
-            alt="Mory"
-            className={styles.logoImage}
-            priority
-          />
+          <Link href="/" aria-label="메인페이지로 이동">
+            <Image
+              src={logoImage}
+              alt="Mory"
+              className={styles.logoImage}
+              priority
+            />
+            <span className={styles.brandLabel}>| 장례 희망</span>
+          </Link>
         </div>
         <nav className={styles.nav}>
           <Link href="/rankings">TOP 20</Link>
