@@ -8,8 +8,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
-  padding: 0 2rem;
+  min-height: 40px;
+  padding: 24px 2rem;
   box-sizing: border-box;
   max-width: 1400px;
   width: 100%;
@@ -53,7 +53,7 @@
 }
 
 .loginShell {
-  min-height: calc(100vh - 40px);
+  min-height: calc(100vh - 88px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,7 +128,7 @@
 }
 
 .container {
-  min-height: calc(100vh - 40px);
+  min-height: calc(100vh - 88px);
   padding: 4rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -338,7 +338,7 @@
 
 @media (max-width: 960px) {
   .header {
-    padding: 0 1.25rem;
+    padding: 24px 1.25rem;
   }
 
   .topBar {

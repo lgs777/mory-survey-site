@@ -10,8 +10,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
-  padding: 0 2rem;
+  min-height: 40px;
+  padding: 24px 2rem;
   box-sizing: border-box;
   max-width: 1400px;
   width: 100%;
