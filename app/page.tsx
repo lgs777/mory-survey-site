@@ -1,9 +1,20 @@
 import styles from './page.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase, mockOpinions } from '@/lib/supabase';
 import InlineOpinionForm from '@/components/InlineOpinionForm';
+import logoImage from '@/logo.png';
 
 export const revalidate = 0; // Disable caching to fetch fresh data
+
+function sortByCreatedAtAscending<T extends { created_at?: string }>(opinions: T[]) {
+  return [...opinions].sort((left, right) => {
+    const leftTime = left.created_at ? new Date(left.created_at).getTime() : 0;
+    const rightTime = right.created_at ? new Date(right.created_at).getTime() : 0;
+
+    return leftTime - rightTime;
+  });
+}
 
 export default async function Home() {
   let opinions = supabase ? [] : mockOpinions;
@@ -13,7 +24,7 @@ export default async function Home() {
       .from('opinions')
       .select('*')
       .eq('status', 'approved')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: true });
 
     if (error) {
       console.error('Failed to load approved opinions:', error.message);
@@ -22,6 +33,8 @@ export default async function Home() {
     }
   }
 
+  const orderedOpinions = sortByCreatedAtAscending(opinions);
+
   // Removed old toss colors because we use designSystem standard.
   // Instead of colored cards, we'll use clean white cards.
 
@@ -29,7 +42,12 @@ export default async function Home() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <strong>Mory</strong> <span className={styles.logoDivider}>|</span> 장례문화가 불편한 순간
+          <Image
+            src={logoImage}
+            alt="Mory"
+            className={styles.logoImage}
+            priority
+          />
         </div>
         <nav className={styles.nav}>
           <Link href="/rankings">TOP 20</Link>
@@ -45,16 +63,16 @@ export default async function Home() {
           <InlineOpinionForm />
         </section>
 
-        <section className={`${styles.rightColumnWrapper} ${opinions.length > 5 ? styles.scrollableRightColumn : ''}`}>
+        <section className={`${styles.rightColumnWrapper} ${orderedOpinions.length > 5 ? styles.scrollableRightColumn : ''}`}>
           <div className={styles.scrollInner}>
             <div className={styles.rightColumn}>
-              {opinions.length === 0 ? (
+              {orderedOpinions.length === 0 ? (
                 <div className={styles.emptyState}>
                   <strong>아직 승인된 의견이 없습니다.</strong>
                   <p>새로운 의견이 승인되면 이 영역에 카드가 표시됩니다.</p>
                 </div>
               ) : (
-                opinions.map((op, i) => {
+                orderedOpinions.map((op, i) => {
                   return (
                     <div key={op.id ?? i} className={styles.card} style={{ backgroundColor: '#ffffff', color: '#52453C', border: '1px solid #e7e5e4' }}>
                       <div className={styles.cardHeader}>

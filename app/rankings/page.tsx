@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './page.module.css';
+import logoImage from '@/logo.png';
 
 interface Opinion {
   id: string;
@@ -37,7 +39,12 @@ export default function RankingsPage() {
       <header className={styles.topHeader}>
         <div className={styles.logo}>
           <Link href="/">
-            <strong>Mory</strong> <span className={styles.logoDivider}>|</span> 장례문화가 불편한 순간
+            <Image
+              src={logoImage}
+              alt="Mory"
+              className={styles.logoImage}
+              priority
+            />
           </Link>
         </div>
         <nav className={styles.nav}>
