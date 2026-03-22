@@ -166,3 +166,23 @@
   font-weight: 500;
   word-break: keep-all;
 }
+
+.emptyState {
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--foreground);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.emptyState strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.emptyState p {
+  color: var(--secondary);
+  line-height: 1.6;
+}

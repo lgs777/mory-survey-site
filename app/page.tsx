@@ -6,17 +6,19 @@ import InlineOpinionForm from '@/components/InlineOpinionForm';
 export const revalidate = 0; // Disable caching to fetch fresh data
 
 export default async function Home() {
-  let opinions = mockOpinions;
-  
+  let opinions = supabase ? [] : mockOpinions;
+
   if (supabase) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('opinions')
       .select('*')
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
-    
-    if (data && data.length > 0) {
-      opinions = data;
+
+    if (error) {
+      console.error('Failed to load approved opinions:', error.message);
+    } else {
+      opinions = data ?? [];
     }
   }
 
@@ -46,19 +48,26 @@ export default async function Home() {
         <section className={`${styles.rightColumnWrapper} ${opinions.length > 5 ? styles.scrollableRightColumn : ''}`}>
           <div className={styles.scrollInner}>
             <div className={styles.rightColumn}>
-              {opinions.map((op, i) => {
-                return (
-                  <div key={op.id ?? i} className={styles.card} style={{ backgroundColor: '#ffffff', color: '#52453C', border: '1px solid #e7e5e4' }}>
-                    <div className={styles.cardHeader}>
-                      <span>{['🤔','💬','💡','👀','🙌'][i % 5]}</span>
-                      <span>{i + 1}번째 불편함</span>
+              {opinions.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <strong>아직 승인된 의견이 없습니다.</strong>
+                  <p>새로운 의견이 승인되면 이 영역에 카드가 표시됩니다.</p>
+                </div>
+              ) : (
+                opinions.map((op, i) => {
+                  return (
+                    <div key={op.id ?? i} className={styles.card} style={{ backgroundColor: '#ffffff', color: '#52453C', border: '1px solid #e7e5e4' }}>
+                      <div className={styles.cardHeader}>
+                        <span>{['🤔','💬','💡','👀','🙌'][i % 5]}</span>
+                        <span>{i + 1}번째 불편함</span>
+                      </div>
+                      <div className={styles.cardContent}>
+                        {op.content}
+                      </div>
                     </div>
-                    <div className={styles.cardContent}>
-                      {op.content}
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
         </section>
