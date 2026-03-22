@@ -46,7 +46,7 @@ export default function RankingsPage() {
               className={styles.logoImage}
               priority
             />
-            <span className={styles.brandLabel}>| 장례 희망</span>
+            <span className={styles.brandLabel}>장례 문화가 불편했던 순간</span>
           </Link>
         </div>
         <nav className={styles.nav}>
