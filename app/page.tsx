@@ -78,7 +78,16 @@ export default async function Home() {
               ) : (
                 orderedOpinions.map((op, i) => {
                   return (
-                    <div key={op.id ?? i} className={styles.card} style={{ backgroundColor: '#ffffff', color: '#52453C', border: '1px solid #e7e5e4' }}>
+                    <div
+                      key={op.id ?? i}
+                      className={styles.card}
+                      style={{
+                        backgroundColor: '#ffffff',
+                        color: '#52453C',
+                        border: '1px solid #e7e5e4',
+                        animationDelay: `${i * 55}ms`,
+                      }}
+                    >
                       <div className={styles.cardHeader}>
                         <span>{['🤔','💬','💡','👀','🙌'][i % 5]}</span>
                         <span>{i + 1}번째 불편함</span>
