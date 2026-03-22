@@ -61,7 +61,7 @@ export default async function Home() {
       <main className={styles.mainLayout}>
         <section className={styles.leftColumn}>
           <h1 className={styles.title}>
-            현재 장례문화가 불편할 때,<br/>
+            장례문화가 불편할 때,<br/>
             언제였나요?
           </h1>
           <InlineOpinionForm />
