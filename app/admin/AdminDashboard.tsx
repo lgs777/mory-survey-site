@@ -293,49 +293,51 @@ export default function AdminDashboard() {
                     <td className={styles.dateCell}>
                       {new Date(opinion.created_at).toLocaleString('ko-KR')}
                     </td>
-                    <td className={styles.actions}>
-                      {opinion.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() =>
-                              handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
-                            }
-                            className={styles.approveBtn}
-                          >
-                            저장 및 승인
-                          </button>
-                          <button
-                            onClick={() => handleDelete(opinion.id)}
-                            className={styles.rejectBtn}
-                          >
-                            삭제
-                          </button>
-                        </>
-                      )}
-                      {opinion.status !== 'pending' && (
-                        <>
-                          <button
-                            onClick={() =>
-                              handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
-                            }
-                            className={styles.approveBtn}
-                          >
-                            수정 저장
-                          </button>
-                          <button
-                            onClick={() => handleUpdate(opinion.id, { status: 'pending' })}
-                            className={styles.rejectBtn}
-                          >
-                            대기중으로 변경
-                          </button>
-                          <button
-                            onClick={() => handleDelete(opinion.id)}
-                            className={styles.rejectBtn}
-                          >
-                            삭제
-                          </button>
-                        </>
-                      )}
+                    <td className={styles.actionsCell}>
+                      <div className={styles.actions}>
+                        {opinion.status === 'pending' && (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
+                              }
+                              className={styles.approveBtn}
+                            >
+                              저장 및 승인
+                            </button>
+                            <button
+                              onClick={() => handleDelete(opinion.id)}
+                              className={styles.rejectBtn}
+                            >
+                              삭제
+                            </button>
+                          </>
+                        )}
+                        {opinion.status !== 'pending' && (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleApprove(opinion.id, opinion.category, opinion.hashtags || [])
+                              }
+                              className={styles.approveBtn}
+                            >
+                              수정 저장
+                            </button>
+                            <button
+                              onClick={() => handleUpdate(opinion.id, { status: 'pending' })}
+                              className={styles.rejectBtn}
+                            >
+                              대기중으로 변경
+                            </button>
+                            <button
+                              onClick={() => handleDelete(opinion.id)}
+                              className={styles.rejectBtn}
+                            >
+                              삭제
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
