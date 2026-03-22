@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ADMIN_SESSION_COOKIE, isValidAdminSession } from '@/lib/admin-auth';
-import { isDatabaseConfigured, supabaseAdmin } from '@/lib/supabase-admin';
+import { isAdminDatabaseConfigured, supabaseAdmin } from '@/lib/supabase-admin';
 
 function unauthorizedResponse() {
   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     return unauthorizedResponse();
   }
 
-  if (!supabaseAdmin || !isDatabaseConfigured()) {
+  if (!supabaseAdmin || !isAdminDatabaseConfigured()) {
     return NextResponse.json(
       { error: '데이터베이스가 아직 연결되지 않았습니다.' },
       { status: 503 },
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
-    if (!supabaseAdmin || !isDatabaseConfigured()) {
+    if (!supabaseAdmin || !isAdminDatabaseConfigured()) {
       return NextResponse.json(
         { error: '데이터베이스가 아직 연결되지 않았습니다.' },
         { status: 503 },
@@ -79,7 +79,7 @@ export async function PATCH(request: NextRequest) {
     const { id, status } = await request.json();
     if (!id || !status) return NextResponse.json({ error: 'Missing id or status' }, { status: 400 });
 
-    if (!supabaseAdmin || !isDatabaseConfigured()) {
+    if (!supabaseAdmin || !isAdminDatabaseConfigured()) {
       return NextResponse.json(
         { error: '데이터베이스가 아직 연결되지 않았습니다.' },
         { status: 503 },

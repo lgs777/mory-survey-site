@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { isDatabaseConfigured } from '@/lib/supabase-admin';
+import { isPublicDatabaseConfigured } from '@/lib/supabase-admin';
 import { supabase, mockOpinions } from '@/lib/supabase';
 
 export async function GET() {
@@ -27,14 +27,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
-    if (supabase && isDatabaseConfigured()) {
-      const { data, error } = await supabase
+    if (supabase && isPublicDatabaseConfigured()) {
+      const { error } = await supabase
         .from('opinions')
         .insert([{ content, category: category || '기타', hashtags: hashtags || [], status: 'pending' }])
-        .select();
+        ;
 
       if (error) throw error;
-      return NextResponse.json(data[0], { status: 201 });
+      return NextResponse.json({ success: true }, { status: 201 });
     }
 
     return NextResponse.json(
