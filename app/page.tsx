@@ -1,10 +1,16 @@
 import styles from './page.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Nanum_Myeongjo } from 'next/font/google';
 import { supabase, mockOpinions } from '@/lib/supabase';
 import InlineOpinionForm from '@/components/InlineOpinionForm';
 
 export const revalidate = 0; // Disable caching to fetch fresh data
+
+const nanumMyeongjo = Nanum_Myeongjo({
+  weight: ['800'],
+  preload: false,
+});
 
 function sortByCreatedAtAscending<T extends { created_at?: string }>(opinions: T[]) {
   return [...opinions].sort((left, right) => {
@@ -60,7 +66,7 @@ export default async function Home() {
 
       <main className={styles.mainLayout}>
         <section className={styles.leftColumn}>
-          <h1 className={styles.title}>
+          <h1 className={`${styles.title} ${nanumMyeongjo.className}`}>
             장례문화가 불편할 때,<br/>
             언제였나요?
           </h1>
