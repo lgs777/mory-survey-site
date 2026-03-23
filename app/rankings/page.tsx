@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Nanum_Myeongjo } from 'next/font/google';
 import styles from './page.module.css';
 
 interface Opinion {
@@ -11,6 +12,11 @@ interface Opinion {
   category: string;
   hashtags: string[];
 }
+
+const nanumMyeongjo = Nanum_Myeongjo({
+  weight: ['800'],
+  preload: false,
+});
 
 export default function RankingsPage() {
   const [opinions, setOpinions] = useState<Opinion[]>([]);
@@ -56,7 +62,7 @@ export default function RankingsPage() {
 
       <main className={styles.mainLayout}>
         <section className={styles.leftColumn}>
-          <h1 className={styles.title}>
+          <h1 className={`${styles.title} ${nanumMyeongjo.className}`}>
             장례식이 불편한 순간<br/>
             TOP 20
           </h1>
