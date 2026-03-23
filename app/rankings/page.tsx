@@ -13,10 +13,67 @@ interface Opinion {
   hashtags: string[];
 }
 
+type RankingGroup = {
+  category: string;
+  count: number;
+  summary: string;
+};
+
 const nanumMyeongjo = Nanum_Myeongjo({
   weight: ['800'],
   preload: false,
 });
+
+function tokenizeContent(content: string) {
+  return Array.from(
+    new Set(
+      content
+        .split(/\s+/)
+        .map((token) => token.replace(/[^0-9A-Za-z가-힣]/g, '').trim())
+        .filter((token) => token.length >= 2),
+    ),
+  );
+}
+
+function buildGroupSummary(opinions: Opinion[]) {
+  if (opinions.length === 0) {
+    return '';
+  }
+
+  const scoredOpinions = opinions.map((opinion) => {
+    const candidateTokens = tokenizeContent(opinion.content);
+    const candidateHashtags = new Set(opinion.hashtags);
+
+    let score = 0;
+
+    for (const other of opinions) {
+      if (other.id === opinion.id) {
+        continue;
+      }
+
+      const sharedHashtags = other.hashtags.filter((tag) => candidateHashtags.has(tag)).length;
+      const otherTokens = tokenizeContent(other.content);
+      const sharedTokens = otherTokens.filter((token) => candidateTokens.includes(token)).length;
+
+      score += sharedHashtags * 3 + sharedTokens;
+    }
+
+    return {
+      content: opinion.content.trim().replace(/\s+/g, ' '),
+      score,
+    };
+  });
+
+  scoredOpinions.sort((left, right) => {
+    if (right.score !== left.score) {
+      return right.score - left.score;
+    }
+
+    return right.content.length - left.content.length;
+  });
+
+  return scoredOpinions[0]?.content ?? '';
+}
 
 export default function RankingsPage() {
   const [opinions, setOpinions] = useState<Opinion[]>([]);
@@ -35,8 +92,13 @@ export default function RankingsPage() {
     return acc;
   }, {} as Record<string, Opinion[]>);
 
-  const topCategories = Object.entries(categorized)
-    .sort((a, b) => b[1].length - a[1].length)
+  const rankingGroups: RankingGroup[] = Object.entries(categorized)
+    .map(([category, groupedOpinions]) => ({
+      category,
+      count: groupedOpinions.length,
+      summary: buildGroupSummary(groupedOpinions),
+    }))
+    .sort((left, right) => right.count - left.count)
     .slice(0, 20); // Show up to 20
 
   return (
@@ -75,14 +137,17 @@ export default function RankingsPage() {
 
         <section className={styles.rightColumn}>
           <div className={styles.rankingsList}>
-            {topCategories.length === 0 && (
+            {rankingGroups.length === 0 && (
               <p className={styles.empty}>데이터를 불러오는 중이거나 없습니다.</p>
             )}
-            {topCategories.map(([category, ops], idx) => (
-              <div key={category} className={`${styles.listItem} glass`}>
+            {rankingGroups.map((group, idx) => (
+              <div key={group.category} className={`${styles.listItem} glass`}>
                 <div className={styles.rank}>{idx + 1}위</div>
-                <div className={styles.content}>{category}</div>
-                <div className={styles.count}>{ops.length}명</div>
+                <div className={styles.contentBlock}>
+                  <div className={styles.content}>{group.summary}</div>
+                  <div className={styles.meta}>{group.category} 관련 의견</div>
+                </div>
+                <div className={styles.count}>{group.count}명</div>
               </div>
             ))}
           </div>
