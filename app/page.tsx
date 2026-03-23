@@ -91,7 +91,6 @@ export default async function Home() {
                         backgroundColor: '#ffffff',
                         color: '#52453C',
                         border: '1px solid #e7e5e4',
-                        animationDelay: `${i * 55}ms`,
                       }}
                     >
                       <div className={styles.cardHeader}>
